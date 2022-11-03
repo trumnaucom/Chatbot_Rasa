@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Brand: Direct Child of ".navbar" -->
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#">
+    <img src="../image/logo.png" style="width:64px;">
+    </a>
+    
+    <ul class="navbar-nav">
+       <li class="nav-item">
+          <a class="nav-link" href="#">Sản phẩm</a>
+       </li>
+       <li class="nav-item">
+          <a class="nav-link" href="#">Giới thiệu</a>
+       </li>
+       <li class="nav-item">
+          <a class="nav-link" href="#">Thương hiệu</a>
+       </li>
+    </ul>
+ </nav>
+ 
+ 
+ 
+    
+    
+    <button class="open-button" onclick="openForm()">Chat</button>
+
+    <div class="chat-popup" id="myForm">
+        <form action="/action_page.php" class="form-container">
+            <h1>Chat</h1>
+
+            <div class="messages">
+                <div class="container">
+                    <img src="https://www.w3schools.com/w3images/bandmember.jpg" alt="Avatar" style="width:100%;">
+                    <p>Tôi có thể giúp gì cho bạn?</p>
+                    <span class="time-right">11:00</span>
+                </div>
+
+            </div>
+
+            <label for="msg"><b>Message</b></label>
+            <textarea placeholder="Type message.." name="msg" id="msg" required></textarea>
+
+            <button type="button" class="btn" onclick="chat()">Send</button>
+            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+        </form>
+    </div>
+
+
+    <script type="text/javascript">
+        function openForm() {
+            document.getElementById("myForm").style.display = "block";
+
+        }
+
+        function chat() {
+            //get input
+            var userMsg = document.getElementById("msg").value;
+
+
+            // if userMsg is empty, do nothing
+            if (userMsg == "") {
+                return;
+            }
+
+            // clear input
+            document.getElementById("msg").value = "";
+
+            var userMsgHTML = '<div class="container darker"><img src="https://www.w3schools.com/w3images/avatar_g2.jpg" alt="Avatar" class="right" style="width:100%;"><p>' + userMsg + '</p><span class="time-left">11:01</span></div>';
+
+            // apeend input to messages
+            document.getElementsByClassName("messages")[0].innerHTML += userMsgHTML;
+
+            let xhr = new XMLHttpRequest();
+
+            // send to bot.php
+            xhr.open("POST", "bot.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(`messageValue=${userMsg}`)
+
+            xhr.onload = function () {
+                if (this.status == 200) {
+                    var botMsg = this.responseText;
+                    console.log(botMsg);
+                    var botMsgHTML = '<div class="container"><img src="https://www.w3schools.com/w3images/bandmember.jpg" alt="Avatar" style="width:100%;"><p>' + botMsg + '</p><span class="time-right">11:02</span></div>';
+
+                    // apeend bot response to messages
+                    document.getElementsByClassName("messages")[0].innerHTML += botMsgHTML;
+                }
+            }
+
+        }
+
+        function closeForm() {
+            document.getElementById("myForm").style.display = "none";
+        }
+
+    </script>
+</body>
+</html>
